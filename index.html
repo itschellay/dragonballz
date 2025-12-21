@@ -34,12 +34,12 @@
         </div>
         <div class="row">
             <div class="col">
-                <div class="card rounded-3 p-5 mx-3 my-2">
-                    <div class="card text-center">
-                        <div style="width: 100px; height: 100px" class="bg-secondary rounded-circle">
-                            <img class="w-100 mx-auto" src="`+photo+`">
+                <div class="card rounded-3 p-5 mx-3 my-2" id="content">
+                    <div class="card rounded-4" style="width: 200px">
+                        <div style="width: 100px; height: 100px" class="bg-secondary rounded-circle mx-auto">
+                            <img src="`+photo+`" class="w-100 mx-auto">
                         </div>
-                        <div class="h3">+name+</div>
+                        <div class="h3 mx-auto">+name+</div>
                     </div>
 
                 </div>
@@ -63,33 +63,38 @@
 
     <script>
         var content = document.getElementById("content");
-        var page = document.getElemmentById("page");
+        var pageText = document.getElemmentById("pageText");
         var name, photo;
 
         var page = 1;
 
         function prevPage() {
             page--;
-            page.innerHTML = "Page " + page;
+            pageText.innerHTML = "Page " + page;
             content.innerHTML = "";
             getDragonBall();
         }
 
         function nextPage() {
             page++;
-            page.innerHTML = "Page " + page;
+            pageText.innerHTML = "Page " + page;
             content.innerHTML = "";
             getDragonBall();
         }
 
         const getDragonBall = async () => {
-            const response = await fetch('https://dragonball-api.com/api/characters/1');
-            const dragonBallData = await response.json();
+            for (var i = (20 * page) - 19; i <= page * 20; i++) {
+                const response = await fetch('https://dragonball-api.com/api/characters/');
+                const dragonBallData = await response.json();
 
-            name = dragonBallData.name;
-            photo = dragonBallData.image;
+                name = dragonBallData.name;
+                photo = dragonBallData.image;
 
-            content.innerHTML = 
+                content.innerHTML = `
+
+
+                `;
+            }
         }
 
     </script>
