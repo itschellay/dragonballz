@@ -20,10 +20,10 @@
             </div>
             <div class="col-12 col-md-0 col-lg-5"></div>
             <div class="col-12 col-md-8 col-lg-4">
-                <input type="text" placeholder="Search" class="form-control rounded-3 p-3 m-2" id="">
+                <input type="text" placeholder="Search by ID" class="form-control rounded-3 p-3 m-2" id="searchInput">
             </div>
             <div class="col-12 col-md-4 col-lg-1">
-                <button class="btn btn-primary p-3 my-2" onclick="getDragonBall()">Search</button>
+                <button class="btn btn-primary p-3 my-2" onclick="searchDragonBall()">Search</button>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col m-3">
-                <nav aria-label="Page navigation">
+                <nav aria-label="Page navigation" id="pagination">
                     <ul class="pagination justify-content-end">
                         <li class="page-item disabled" id="prev">
                             <a class="page-link" onclick="prevPage()">Previous</a>
@@ -56,6 +56,7 @@
 
     <script>
         var content = document.getElementById("content");
+        var searchInput = document.getElementById("searchInput");
         var pageText = document.getElementById("pageText");
         var name, photo, race, id;
 
@@ -136,6 +137,31 @@
                 `;
             }
         }
+
+        const searchDragonBall = async () => {
+            const response = await fetch('https://dragonball-api.com/api/characters/' + searchInput.value);
+            const dragonBallData = await response.json();
+
+            name = dragonBallData.name;
+            photo = dragonBallData.image;
+            race = dragonBallData.race;
+            id = dragonBallData.id;
+
+            content.innerHTML = `
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" >
+                    <div class="card rounded-4 mb-2 mx-auto my-auto h-100" style="width: 250px; height: 400px">
+                        <div style="width: 100%; height: 300px" class="bg-secondary mx-auto d-flex justify-content-center overflow-hidden">
+                            <img src="`+ photo + `" class="w-100 mx-auto object-fit-contain" alt="` + name + `">
+                        </div>
+                            <div class="h3 mx-auto">`+ name + `</div>
+                            <small class="text-center">`+ race + `</small>
+                    </div>
+      `;
+
+            pageText.innerHTML = "";
+            pagination.innerHTML = "";
+        }
+
         getDragonBall();
 
         // No ID = 36 in the API
