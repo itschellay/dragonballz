@@ -62,62 +62,21 @@
 
         var page = 1;
 
-        function prevPage() {
-            page--;
-            pageText.innerHTML = "Page " + page;
-            content.innerHTML = "";
-            getDragonBall();
-            updatePagination();
-
-        }
-
-        function nextPage() {
-            if (page < 6) {
-                page++;
-                pageText.innerHTML = "Page " + page;
-                content.innerHTML = "";
-                getDragonBall();
-                updatePagination();
-            }
-        }
-
-        function goTo(pageNum) {
-            page = pageNum;
-            pageText.innerHTML = "Page " + page;
-            content.innerHTML = "";
-            getDragonBall();
-            updatePagination();
-        }
-
-        function updatePagination() {
-            var prev = document.getElementById("prev");
-            var next = document.getElementById("next");
-
-            if (page == 1) {
-                prev.classList.add("disabled");
-            } else {
-                prev.classList.remove("disabled");
-            }
-
-            if (page == 6) {
-                next.classList.add("disabled");
-            } else {
-                next.classList.remove("disabled");
-            }
-        }
-
         const getDragonBall = async () => {
-            var start = (10 * page) - 9;
-            var end = page * 10;
+            var start = (12 * page) - 11;
+            var end = page * 12;
 
             for (var i = start; i <= end; i++) {
-                if (i == 36) continue;
-                if (i == 40) continue;
-                if (i > 59) {
-                    break;
-                }
+                // if (i == 36 || i == 40) continue;
+                if (i > 80) break;
 
                 const response = await fetch('https://dragonball-api.com/api/characters/' + i);
+
+                if (!response.ok) {
+                    end++;
+                    continue;
+                }
+
                 const dragonBallData = await response.json();
 
                 name = dragonBallData.name;
@@ -140,6 +99,17 @@
 
         const searchDragonBall = async () => {
             const response = await fetch('https://dragonball-api.com/api/characters/' + searchInput.value);
+
+            if (!response.ok) {
+                content.innerHTML = `
+                <div class="col text-center m-5" >
+                    No search results.
+                    </div>`;
+                    pageText.innerHTML = "";
+                    pagination.innerHTML = "";
+                    return;
+            }
+
             const dragonBallData = await response.json();
 
             name = dragonBallData.name;
@@ -148,7 +118,7 @@
             id = dragonBallData.id;
 
             content.innerHTML = `
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" >
+                <div class="col-12 col-sm-6 col-md-5 col-lg-3 m-4 mx-auto " >
                     <div class="card rounded-4 mb-2 mx-auto my-auto h-100" style="width: 250px; height: 400px">
                         <div style="width: 100%; height: 300px" class="bg-secondary mx-auto d-flex justify-content-center overflow-hidden">
                             <img src="`+ photo + `" class="w-100 mx-auto object-fit-contain" alt="` + name + `">
@@ -160,6 +130,40 @@
 
             pageText.innerHTML = "";
             pagination.innerHTML = "";
+        }
+
+        function prevPage() {
+            page--;
+            pageText.innerHTML = "Page " + page;
+            content.innerHTML = "";
+            getDragonBall();
+            updatePagination();
+
+        }
+
+        function nextPage() {
+            if (page < 7) {
+                page++;
+                pageText.innerHTML = "Page " + page;
+                content.innerHTML = "";
+                getDragonBall();
+                updatePagination();
+            }
+        }
+
+        function goTo() {
+            pageText.innerHTML = "Page " + page;
+            content.innerHTML = "";
+            getDragonBall();
+            updatePagination();
+        }
+
+        function updatePagination() {
+            var prev = document.getElementById("prev");
+            var next = document.getElementById("next");
+
+            (page == 1) ? prev.classList.add("disabled") : prev.classList.remove("disabled");
+            (page == 7) ? next.classList.add("disabled") : next.classList.remove("disabled");
         }
 
         getDragonBall();
